@@ -84,6 +84,7 @@ func main() {
 }
 
 func MainAction(c *cli.Context) {
+	host := os.Getenv("HOST")
 	port := c.GlobalInt("port")
 	appPort := strconv.Itoa(c.GlobalInt("appPort"))
 	immediate = c.GlobalBool("immediate")
@@ -105,6 +106,7 @@ func MainAction(c *cli.Context) {
 	proxy := gin.NewProxy(builder, runner)
 
 	config := &gin.Config{
+		Host:    host,
 		Port:    port,
 		ProxyTo: "http://localhost:" + appPort,
 	}
@@ -114,7 +116,7 @@ func MainAction(c *cli.Context) {
 		logger.Fatal(err)
 	}
 
-	logger.Printf("listening on port %d\n", port)
+	logger.Printf("listening on %s:%d\n", host, port)
 
 	shutdown(runner)
 
